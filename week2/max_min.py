@@ -17,7 +17,7 @@ def maxMin(k, arr):
     arr.sort()
     minUnfairness = arr[len(arr) - 1] - arr[0]
 
-    for i in range(len(arr) - k):
+    for i in range(len(arr) - k + 1):
         if arr[i+k-1] - arr[i] < minUnfairness:
             minUnfairness = arr[i+k-1] - arr[i]
 
