@@ -25,9 +25,9 @@ def bomberMan(n, grid):
             if c == '.':
                 matrix[row][col] = 0
             if c == 'O':
-                matrix[row][col] = 2
+                matrix[row][col] = 3
 
-    time = 2
+    time = 1
     while(time <= n):
 
         # Bombs explode!
