@@ -13,59 +13,42 @@ import sys
 #  2. STRING_ARRAY grid
 #
 
-def bomberMan(n, grid):
+def explode(grid):
     rows = len(grid)
     cols = len(grid[0])
 
-    matrix = [[0 for i in range(cols)] for j in range(rows)]
-
+    exploding_positions = []
     for row in range(len(grid)):
         for col in range(len(grid[0])):
-            c = grid[row][col]
-            if c == '.':
-                matrix[row][col] = 0
-            if c == 'O':
-                matrix[row][col] = 3
+            if grid[row][col] == 'O':
+                exploding_positions.append([row, col])
 
-    time = 1
-    while(time <= n):
+    grid = ['O' * cols] * rows
 
-        # Bombs explode!
-        for i in range(rows):
-            for j in range(cols):
-                if matrix[i][j] == 0:
-                    continue
-                matrix[i][j] -= 1
-                if matrix[i][j] == 0:
-                    if i-1 >= 0:
-                        matrix[i-1][j] = 0
-                    if i+1 < rows and matrix[i+1][j] > 1: # don't explode mines that are about to explode
-                        matrix[i+1][j] = 0
-                    if j-1 >= 0:
-                        matrix[i][j-1] = 0
-                    if j+1 < cols and matrix[i][j+1] > 1: # don't explode mines that are about to explode
-                        matrix[i][j+1] = 0
-        
-        if time % 2 == 0:
-        # Bomberman awakes!
-            for i in range(rows):
-                for j in range(cols):
-                    if matrix[i][j] == 0:
-                        matrix[i][j] = 3
+    for position in exploding_positions:
+        row = position[0]
+        col = position[1]
+        grid[row] = grid[row][:col] + '.' + grid[row][col+1:]
+        if row - 1 >= 0:
+            grid[row-1] = grid[row-1][:col] + '.' + grid[row-1][col+1:]
+        if row + 1 < rows:
+            grid[row+1] = grid[row+1][:col] + '.' + grid[row+1][col+1:]
+        if col - 1 >= 0:
+            grid[row] = grid[row][:col-1] + '.' + grid[row][col:]
+        if col + 1 < cols:
+            grid[row] = grid[row][:col+1] + '.' + grid[row][col+2:]
+    
+    return grid
 
-        time += 1
-
-    return_grid = []
-    for i in range(rows):
-        cur_row = ""
-        for j in range(cols):
-            if matrix[i][j] == 0:
-                cur_row += '.'
-            else:
-                cur_row += 'O'
-        return_grid.append(cur_row)
-
-    return return_grid
+def bomberMan(n, grid):
+    if n < 2:
+        return grid
+    elif n % 2 == 0:
+        return ['O' * len(grid[0])] * len(grid)
+    elif (n-1) % 4 != 0:
+        return explode(grid)
+    else:
+        return explode(explode(grid))
 
 if __name__ == '__main__':
     first_multiple_input = input().rstrip().split()
