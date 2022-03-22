@@ -17,17 +17,27 @@ def climbingLeaderboard(ranked, player):
     ranked_dedup = sorted(list(set(ranked)), reverse=True)
 
     ranks = []
-    for i in range(len(player)):
-        for j in range(len(ranked_dedup)):
+    i = 0
+    j_min = 0
+    while i < len(player): 
+        j = j_min
+        while j < len(ranked_dedup):
             if player[i] < ranked_dedup[len(ranked_dedup)-(j+1)]:
                 ranks.append(len(ranked_dedup)-j+1)
+                j += 1
                 break
-            if player[i] == ranked_dedup[len(ranked_dedup)-(j+1)]:
+            elif player[i] == ranked_dedup[len(ranked_dedup)-(j+1)]:
                 ranks.append(len(ranked_dedup)-j)
+                j += 1
                 break
-            if player[i] > ranked_dedup[0]:
+            elif player[i] < ranked_dedup[0]:
+                j_min += 1
+            if player[i] >= ranked_dedup[0]:
                 ranks.append(1)
+                j += 1
                 break
+            j += 1
+        i += 1
     return ranks
 
 if __name__ == '__main__':
