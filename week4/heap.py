@@ -55,11 +55,6 @@ class Heap():
             if self.h[i] < self.h[parent_i]:
                 self.h[i], self.h[parent_i] = self.h[parent_i], self.h[i]
                 i = parent_i
-            elif self.h[i] == self.h[parent_i]:
-                self.h[i], self.h[len(self.h)-1] = self.h[len(self.h)-1], self.h[i]
-                self.h.pop()
-                self.sift_down(i)
-                return
             else:
                 return
 
