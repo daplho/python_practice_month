@@ -8,19 +8,14 @@ class Heap():
 
     def insert(self, x):
         self.h.append(x)
-        self.sift_up(len(self.h) - 1)
+        self.sift_up(0, len(self.h) - 1)
     
     def delete(self, x):
-        for i in range(len(self.h)):
-            if x == self.h[i]:
-                if i == len(self.h)-1:
-                    self.h.pop()
-                    return
-                else:
-                    self.h[i], self.h[len(self.h)-1] = self.h[len(self.h)-1], self.h[i]
-                    self.h.pop()
-                    self.sift_down(i)
-                    return
+        i = self.h.index(x)
+        self.h[i] = self.h[len(self.h)-1]
+        self.h.pop()
+        if i < len(self.h):
+            self.sift_down(i)
 
     def print_min(self):
         self.fptr.write(str(self.h[0]) + '\n')
@@ -28,35 +23,38 @@ class Heap():
     def print_arr(self):
         self.fptr.write(str(self.h) + '\n')
 
-    def sift_down(self, i):
-        while i < len(self.h):
-            child_i1 = 2*i+1
-            child_i2 = 2*i+2
+    def sift_down(self, pos):
+        end_pos = len(self.h)
+        start_pos = pos
+        new_item = self.h[pos]
 
-            if child_i1 < len(self.h) and child_i2 < len(self.h):
-                if self.h[child_i1] < self.h[child_i2] and self.h[child_i1] < self.h[i]:
-                    self.h[child_i1], self.h[i] = self.h[i], self.h[child_i1]
-                    i = child_i1
-                else:
-                    self.h[child_i2], self.h[i] = self.h[i], self.h[child_i2]
-                    i = child_i2
-            elif child_i1 < len(self.h) and self.h[child_i1] < self.h[i]:
-                self.h[child_i1], self.h[i] = self.h[i], self.h[child_i1]
-                i = child_i1
-            elif child_i2 < len(self.h) and self.h[child_i2] < self.h[i]:
-                self.h[child_i2], self.h[i] = self.h[i], self.h[child_i2]
-                i = child_i2
-            else:
-                return
+        child_pos = 2*pos + 1 # left child position
+        while child_pos < end_pos:
+            # set child_pos to index of larger child
+            right_pos = child_pos + 1
+            if right_pos < end_pos and not self.h[child_pos] < self.h[right_pos]:
+                child_pos = right_pos
+            # move the larger child down
+            self.h[pos] = self.h[child_pos]
+            pos = child_pos
+            child_pos = 2*pos + 1
+        # The leaf at pos is empty now. Put new_item there, and bubble it up to its final resting
+        # place.
+        self.h[pos] = new_item
+        self.sift_up(start_pos, pos)
 
-    def sift_up(self, i):
-        while i > 0:
-            parent_i = math.floor((i-1)/2)
-            if self.h[i] < self.h[parent_i]:
-                self.h[i], self.h[parent_i] = self.h[parent_i], self.h[i]
-                i = parent_i
+    def sift_up(self, start_pos, pos):
+        new_item = self.h[pos]
+        while pos > start_pos:
+            parent_pos = math.floor((pos-1)/2)
+            parent = self.h[parent_pos]
+            if new_item < parent:
+                self.h[pos] = parent
+                pos = parent_pos
+                continue
             else:
-                return
+                break
+        self.h[pos] = new_item
 
 if __name__ == "__main__":
     fptr = open(sys.stdout.fileno(), 'w')
