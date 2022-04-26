@@ -15,11 +15,24 @@ import sys
 
 def solve(arr, queries):
     results = []
+
     for d in queries:
         local_max_arr = []
         for i in range(len(arr)-d+1):
-            local_max_arr.append(max(arr[i:i+d]))
-        results.append(min(local_max_arr)) 
+            if i == 0:
+                cur_arr = arr[i:i+d]
+                cur_max = max(cur_arr)
+            else:
+                to_remove = arr[i-1]
+                to_add = arr[i+d-1]
+                if to_remove == cur_max:
+                    cur_arr = arr[i:i+d]
+                    cur_max = max(cur_arr)
+                else:
+                    if cur_max < to_add:
+                        cur_max = to_add
+            local_max_arr.append(cur_max)
+        results.append(min(local_max_arr))
 
     return results
 
