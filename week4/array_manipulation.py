@@ -16,14 +16,18 @@ import sys
 def arrayManipulation(n, queries):
     arr = [0] * n
 
-    for q in queries:
-        a = q[0]
-        b = q[1]
-        k = q[2]
-        for i in range(a, b+1):
-            arr[i-1] += k
+    for a,b,k in queries:
+        arr[a-1] += k
+        if b < len(arr):
+            arr[b] -= k
         
-    return max(arr)
+    max = 0
+    cur = 0
+    for x in arr:
+        cur += x
+        if cur > max:
+            max = cur
+    return max
 
 if __name__ == '__main__':
     fptr = open(sys.stdout.fileno(), 'w')
