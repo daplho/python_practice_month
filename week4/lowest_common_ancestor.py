@@ -47,16 +47,6 @@ class Node:
 '''
 
 def lca(root, v1, v2):
-    # if v1 < root.info and v2 < root.info:
-    #     if root.left != None:
-    #         return lca(root.left, v1, v2)
-    
-    # if v1 > root.info and v2 > root.info:
-    #     if root.right != None:
-    #         return lca(root.right, v1, v2)
-    #     
-    # return root
-
     while root != None:
         if v1 < root.info and v2 < root.info:
             root = root.left
